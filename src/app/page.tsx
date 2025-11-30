@@ -1,101 +1,133 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import Link from 'next/link';
+import { Lock, Unlock, User, Stethoscope, Shield, ArrowRight } from 'lucide-react';
+import CryptoJS from 'crypto-js';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [input, setInput] = useState('Name: Rahul Sharma | BP: 120/80 | Sugar: 95 | Allergy: None');
+  const [encrypted, setEncrypted] = useState('');
+  const [decrypted, setDecrypted] = useState('');
+  const secretKey = 'MedVaultSecret2025';
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const encrypt = () => {
+    const enc = CryptoJS.AES.encrypt(input, secretKey).toString();
+    setEncrypted(enc);
+    setDecrypted('');
+  };
+
+  const decrypt = () => {
+    try {
+      const dec = CryptoJS.AES.decrypt(encrypted, secretKey).toString(CryptoJS.enc.Utf8);
+      setDecrypted(dec);
+    } catch {
+      setDecrypted('Wrong key! Access Denied');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-teal-900 to-purple-900 text-white overflow-x-hidden">
+      {/* Hero */}
+      <motion.div className="text-center pt-20 pb-16 px-6">
+        <motion.h1
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="text-7xl md:text-9xl font-black bg-gradient-to-r from-cyan-400 via-lime-400 to-pink-400 bg-clip-text text-transparent drop-shadow-2xl"
+        >
+          MedVault
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="text-3xl md:text-5xl font-bold mt-8 text-cyan-300"
+        >
+          Your Health Data. Locked. Safe. Private.
+        </motion.p>
+      </motion.div>
+
+      {/* Patient → Encryption → Doctor */}
+      <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-3 gap-16 items-center my-24">
+        <motion.div initial={{ x: -300 }} animate={{ x: 0 }} className="text-center">
+          <div className="w-56 h-56 mx-auto bg-gradient-to-br from-pink-500 to-rose-600 rounded-full flex items-center justify-center shadow-2xl">
+            <User className="w-36 h-36" />
+          </div>
+          <h3 className="text-5xl font-black mt-8 text-pink-400">PATIENT</h3>
+        </motion.div>
+
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.8 }} className="text-center">
+          <ArrowRight className="w-32 h-32 mx-auto text-cyan-400 animate-pulse" />
+          <Lock className="w-28 h-28 mx-auto -mt-10 text-yellow-400" />
+          <p className="text-4xl font-black text-yellow-300 mt-8">AES-256<br/>ENCRYPTION</p>
+        </motion.div>
+
+        <motion.div initial={{ x: 300 }} animate={{ x: 0 }} className="text-center">
+          <div className="w-56 h-56 mx-auto bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center shadow-2xl">
+            <Stethoscope className="w-36 h-36" />
+          </div>
+          <h3 className="text-5xl font-black mt-8 text-blue-400">DOCTOR</h3>
+        </motion.div>
+      </div>
+
+      {/* Live Demo */}
+      <section className="max-w-6xl mx-auto px-8 pb-32">
+        <h2 className="text-6xl font-black text-center mb-20 text-cyan-300">
+          Live Demo – Watch Privacy in Action
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-12">
+          <Card className="p-10 bg-white/10 backdrop-blur-xl border border-cyan-500/50">
+            <h3 className="text-3xl font-bold text-cyan-300 text-center mb-8">Patient Types Data</h3>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className="w-full p-6 rounded-xl bg-black/50 text-white text-lg border border-cyan-600 focus:ring-4 focus:ring-cyan-500"
+              rows={6}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <Button onClick={encrypt} size="lg" className="w-full mt-8 text-2xl py-8 bg-gradient-to-r from-cyan-600 to-teal-600">
+              <Lock className="mr-4" /> Encrypt & Send
+            </Button>
+          </Card>
+
+          <Card className={`p-10 backdrop-blur-xl border-4 ${encrypted ? 'border-yellow-500 shadow-yellow-500/60' : 'border-gray-600'}`}>
+            <h3 className="text-3xl font-bold text-yellow-300 text-center mb-8">Encrypted (Safe)</h3>
+            <div className="bg-black/70 p-6 rounded-xl font-mono text-xs h-48 overflow-y-auto">
+              {encrypted || 'Click Encrypt to see...'}
+            </div>
+            {encrypted && <Shield className="w-28 h-28 mx-auto mt-10 text-green-400 animate-pulse" />}
+          </Card>
+
+          <Card className="p-10 bg-white/10 backdrop-blur-xl border border-pink-500/50">
+            <h3 className="text-3xl font-bold text-pink-300 text-center mb-8">Doctor Decrypts</h3>
+            <Button onClick={decrypt} size="lg" className="w-full text-2xl py-8" disabled={!encrypted}>
+              <Unlock className="mr-4" /> Decrypt Now
+            </Button>
+            {decrypted && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="mt-10 p-8 bg-green-900/70 rounded-2xl text-2xl font-bold text-center"
+              >
+                {decrypted}
+              </motion.div>
+            )}
+          </Card>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Buttons at bottom */}
+        <div className="text-center mt-24 space-x-10">
+          <Button asChild size="lg" className="text-3xl px-16 py-10">
+            <Link href="/register">New User? Register</Link>
+          </Button>
+          <Button asChild size="lg" className="text-3xl px-16 py-10 bg-gradient-to-r from-cyan-600 to-teal-600">
+            <Link href="/login">Login to Portal</Link>
+          </Button>
+        </div>
+      </section>
     </div>
   );
 }
