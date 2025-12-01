@@ -9,7 +9,7 @@ import { Lock, Unlock, User, Stethoscope, Shield, ArrowRight } from 'lucide-reac
 import CryptoJS from 'crypto-js';
 
 export default function Home() {
-  const [input, setInput] = useState('Name: Rahul Sharma | BP: 120/80 | Sugar: 95 | Allergy: None');
+  const [input, setInput] = useState('Name: Birru Srinivas | BP: 120/80 | Sugar: 95 | Allergy: None');
   const [encrypted, setEncrypted] = useState('');
   const [decrypted, setDecrypted] = useState('');
   const secretKey = 'MedVaultSecret2025';
@@ -38,7 +38,7 @@ export default function Home() {
           animate={{ y: 0, opacity: 1 }}
           className="text-7xl md:text-9xl font-black bg-gradient-to-r from-cyan-400 via-lime-400 to-pink-400 bg-clip-text text-transparent drop-shadow-2xl"
         >
-          MedVault
+          Privacy Medical Data
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
