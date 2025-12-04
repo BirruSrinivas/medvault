@@ -38,7 +38,7 @@ export default function Home() {
           animate={{ y: 0, opacity: 1 }}
           className="text-7xl md:text-9xl font-black bg-gradient-to-r from-cyan-400 via-lime-400 to-pink-400 bg-clip-text text-transparent drop-shadow-2xl"
         >
-          Privacy Medical Data
+          MedVault
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
